@@ -307,7 +307,6 @@ public class DialogEngines {
                     bro.write("uci\n");
                     bro.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
                     throw new RuntimeException("Failed to send UCI-commands to the engine process. "
                             + file.getAbsolutePath()
                             + e.getClass() + ": " + e.getMessage());
@@ -339,7 +338,6 @@ public class DialogEngines {
                                 engine.options.add(engineOption);
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
                             bre.close();
                             bri.close();
                             throw (new RuntimeException("Couldn't parse engine option: "
@@ -348,7 +346,6 @@ public class DialogEngines {
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
                     throw new RuntimeException("Failed to read commands from the engine process "
                             + file.getAbsolutePath()
                             + e.getClass() + ": " + e.getMessage());
@@ -365,7 +362,6 @@ public class DialogEngines {
                     bro.write("quit\n");
                     bro.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
                     throw new RuntimeException("Failed to send stop and quit to the engine process. "
                             + file.getAbsolutePath()
                             + e.getClass() + ": " + e.getMessage());
