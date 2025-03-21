@@ -41,11 +41,15 @@ import jfxtras.styles.jmetro.Style;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.asdfjkl.jfxchess.util.ThreadInterruptedException;
 
 import static org.asdfjkl.jfxchess.gui.EngineOption.*;
 
 public class DialogEngines {
 
+    private static final Logger LOGGER = Logger.getLogger(DialogEngines.class.getName());
     final FileChooser fileChooser = new FileChooser();
 
     Stage stage;
@@ -292,7 +296,9 @@ public class DialogEngines {
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.WARNING, "Interrupted!", e);
+                        Thread.currentThread().interrupt();
+                        throw new ThreadInterruptedException("Thread Interrupted", e);
                     }
                 }
 
@@ -311,8 +317,9 @@ public class DialogEngines {
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                        LOGGER.log(Level.WARNING, "Interrupted!", e);
+                        Thread.currentThread().interrupt();
+                        throw new ThreadInterruptedException("Thread Interrupted", e);                    }
                 }
 
                 Engine engine = new Engine();
@@ -371,7 +378,9 @@ public class DialogEngines {
                         engineProcess.destroy();
                     }
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.WARNING, "Interrupted!", e);
+                    Thread.currentThread().interrupt();
+                    throw new ThreadInterruptedException("Thread Interrupted", e);                   
                 }
 
                 // Add engine to the engineList and make the list item selected.
