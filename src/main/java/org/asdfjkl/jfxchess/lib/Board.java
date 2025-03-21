@@ -266,7 +266,7 @@ public class Board {
             throw new IllegalArgumentException("fen: turn part is invalid in "+fen);
         }
         // check that castles part in correctly encoded using regex
-        boolean castlesMatch = fenParts[2].matches("^-|[KQABCDEFGH]{0,2}[kqabcdefgh]{0,2}$");
+        boolean castlesMatch = fenParts[2].matches("^(?:-|(?:[KQABCDEFGH]{0,2}[kqabcdefgh]{0,2}))$");
         if(!castlesMatch) {
             throw new IllegalArgumentException("fen: castles encoding is invalid in "+fen);
         }
