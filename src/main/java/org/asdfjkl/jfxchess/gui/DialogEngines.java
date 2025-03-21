@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.asdfjkl.jfxchess.util.ThreadInterruptedException;
+import org.asdfjkl.jfxchess.exceptions.ThreadInterruptedException;
 
 import static org.asdfjkl.jfxchess.gui.EngineOption.*;
 
