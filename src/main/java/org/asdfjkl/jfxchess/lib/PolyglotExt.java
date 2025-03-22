@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.security.SecureRandom;
 
 public class PolyglotExt {
 
@@ -238,7 +239,7 @@ public class PolyglotExt {
             for(PolyglotExtEntry entry : entries) {
                 overallCount += entry.count;
             }
-            int idx = (int) (Math.random() * overallCount);
+            int idx = (new SecureRandom().nextInt() * overallCount);
             int tempCount = 0;
             for(PolyglotExtEntry entry : entries) {
                 tempCount += entry.count;
