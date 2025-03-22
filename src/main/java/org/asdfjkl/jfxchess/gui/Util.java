@@ -1,7 +1,8 @@
 package org.asdfjkl.jfxchess.gui;
 
+import java.nio.ByteBuffer;
+import java.security.SecureRandom;
 import java.util.Date;
-import java.util.Random;
 
 public class Util {
 
@@ -9,7 +10,10 @@ public class Util {
 
         Date date = new Date();
         long timeInMilliseconds = date.getTime();
-        Random random = new Random(timeInMilliseconds);
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(timeInMilliseconds);
+        byte[] seed = buffer.array();
+        SecureRandom random = new SecureRandom(seed);
 
         String filename = "";
         for(int i=0;i<8;i++) {
