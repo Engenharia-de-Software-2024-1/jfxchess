@@ -15,13 +15,13 @@ public class Util {
         byte[] seed = buffer.array();
         SecureRandom random = new SecureRandom(seed);
 
-        String filename = "";
+        StringBuilder filename = new StringBuilder();
         for(int i=0;i<8;i++) {
             char c = (char) (random.nextInt(26) + 97);
-            filename += c;
+            filename.append(c);
         }
 
-        return filename + ".tmp";
+        return filename.append(".tmp").toString();
     }
 
 }
