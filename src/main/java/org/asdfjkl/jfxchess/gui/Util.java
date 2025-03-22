@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Util {
 
-    public static String getRandomFilename() {
+    public String getRandomFilename() {
 
         Date date = new Date();
         long timeInMilliseconds = date.getTime();

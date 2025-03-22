@@ -115,7 +115,7 @@ public class PgnDatabase {
 
     public void saveDatabaseAs(String filename) {
 
-        String tmpFilenameWoDir = Util.getRandomFilename();
+        String tmpFilenameWoDir = new Util().getRandomFilename();
 
         File file = new File(filename);
         File path = file.getParentFile();
@@ -406,7 +406,7 @@ public class PgnDatabase {
 
     public void deleteGame(int index) {
 
-        String tmpFilenameWoDir = Util.getRandomFilename();
+        String tmpFilenameWoDir = new Util().getRandomFilename();
 
         File file = new File(filename);
         File path = file.getParentFile();
