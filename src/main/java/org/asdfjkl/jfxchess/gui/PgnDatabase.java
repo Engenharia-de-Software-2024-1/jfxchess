@@ -32,6 +32,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 public class PgnDatabase {
 
@@ -111,27 +113,19 @@ public class PgnDatabase {
 
         File file = new File(filename);
         File path = file.getParentFile();
-        String filenameWithoutDir = file.getName();
         File tmpFile = new File(path, tmpFilenameWoDir);
 
         final String currentPgnFilename = this.filename;
         final String pgnFilename = filename;
         final String tmpFilename = tmpFile.getAbsolutePath();
 
-        final boolean overwrite = pgnFilename.equals(tmpFilename);
-
-        final ObservableList<PgnDatabaseEntry> entries = this.entries;
-
-
         LoadingDialog loadingDialog = new LoadingDialog();
         loadingDialog.showLoadingDialog("Saving PGN...");
 
         Task<Void> task = new Task<>() {
-            @Override protected Void call() throws Exception {
+            @Override protected Void call() throws IOException {
 
                 OptimizedRandomAccessFile rafReader = null;
-                OptimizedRandomAccessFile rafWriter = null;
-                BufferedWriter writer = null;
 
                 File currentPgn = new File(currentPgnFilename);
                 long fileSize = currentPgn.length();
@@ -142,10 +136,10 @@ public class PgnDatabase {
 
                 long linesWritten = 0;
 
-                try {
+                try (
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(tmpFilename));
+                ) {
                     rafReader = new OptimizedRandomAccessFile(currentPgnFilename, "r");
-                    //rafWriter = new OptimizedRandomAccessFile(tmpFilename, "rw");
-                    writer = new BufferedWriter(new FileWriter(tmpFilename));
 
                     for (int i = 0; i < entries.size(); i++) {
 
@@ -205,6 +199,7 @@ public class PgnDatabase {
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
+                    // Raf reader do not implements AutoClosable so I'll need to close manually
                     if (rafReader != null) {
                         try {
                             rafReader.close();
@@ -212,27 +207,13 @@ public class PgnDatabase {
                             e.printStackTrace();
                         }
                     }
-                    if (rafWriter != null) {
-                        try {
-                            rafWriter.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if(writer != null) {
-                        try {
-                            writer.flush();
-                            writer.close();
-                        } catch(IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
                 }
 
                 File pgn = new File(pgnFilename);
-                pgn.delete();
-                tmpFile.renameTo(pgn);
-
+                Path pgnPath = pgn.toPath();
+                Path tmpFilePath = tmpFile.toPath();
+                Files.delete(pgnPath);
+                Files.move(tmpFilePath, pgnPath);                
                 return null;
             }
         };
