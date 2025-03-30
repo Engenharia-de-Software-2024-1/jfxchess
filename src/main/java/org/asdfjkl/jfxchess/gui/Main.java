@@ -24,51 +24,43 @@ import java.nio.channels.FileLock;
 import java.nio.channels.FileChannel;
 import java.nio.channels.OverlappingFileLockException;
 import java.nio.file.Files;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.IOException;
 
 public class Main {
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-    public static void main(String[] args) {
-        try {
-            String dir = System.getProperty("user.home");
-            File fDir = new File(dir);
-            File file = new File(fDir, "x43890423_jry.lock");
-            if (!lockInstance(file.getAbsolutePath())) {
-                LOGGER.log(Level.SEVERE, "Another instance of the application is already running.");
-                System.exit(1);
-            }
-            App.main(args);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "An IO error occurred during startup", e);
+    public static void main(String[] args) {        
+        String dir = System.getProperty("user.home");
+        File fDir = new File(dir);
+        File file = new File(fDir, "x43890423_jry.lock");
+        if (!lockInstance(file.getAbsolutePath())) {
+            LOGGER.log(Level.SEVERE, "Another instance of the application is already running.");
             System.exit(1);
         }
+        App.main(args);
     }
 
-    private static boolean lockInstance(final String lockFile) throws IOException {
-        final File file = new File(lockFile);
-
+    private static boolean lockInstance(final String lockFile) {
+        final File file = new File(lockFile);    
         try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
-            FileChannel fileChannel = randomAccessFile.getChannel()) {
-                
-            Optional<FileLock> fileLock = Optional.ofNullable(fileChannel.tryLock());
-
-            if (fileLock.isEmpty()) {
+             FileChannel fileChannel = randomAccessFile.getChannel()) {
+             
+            FileLock fileLock = fileChannel.tryLock();
+            if (fileLock == null) {
                 return false;
             }
-
+    
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
-                    fileLock.get().release();
+                    fileLock.release();
                     Files.deleteIfExists(file.toPath()); 
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Error releasing file lock!", e);
                 }
             }));
             return true;
-        } catch (OverlappingFileLockException e) {
+        } catch (OverlappingFileLockException | IOException e) {
             LOGGER.log(Level.SEVERE, "File is already locked by another process.", e);
             return false;
         }
