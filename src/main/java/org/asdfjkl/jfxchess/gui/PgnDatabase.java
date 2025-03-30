@@ -21,17 +21,10 @@ package org.asdfjkl.jfxchess.gui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import jfxtras.styles.jmetro.JMetro;
 import org.asdfjkl.jfxchess.lib.*;
 
 import java.io.BufferedWriter;
@@ -39,6 +32,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 public class PgnDatabase {
 
@@ -46,7 +41,6 @@ public class PgnDatabase {
     private ObservableList<PgnDatabaseEntry> searchResults;
     final PgnReader reader;
     String filename;
-    static Stage stage;
 
     DialogDatabase dialogDatabase = null;
 
@@ -119,45 +113,19 @@ public class PgnDatabase {
 
         File file = new File(filename);
         File path = file.getParentFile();
-        String filenameWithoutDir = file.getName();
         File tmpFile = new File(path, tmpFilenameWoDir);
 
         final String currentPgnFilename = this.filename;
         final String pgnFilename = filename;
         final String tmpFilename = tmpFile.getAbsolutePath();
 
-        final boolean overwrite = pgnFilename.equals(tmpFilename);
-
-        final ObservableList<PgnDatabaseEntry> entries = this.entries;
-
-        stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UNDECORATED);
-
-        Label lblScanPgn = new Label("Saving PGN...");
-        ProgressBar progressBar = new ProgressBar();
-
-        VBox vbox = new VBox();
-        vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(lblScanPgn, progressBar);
-
-        vbox.setSpacing(10);
-        vbox.setPadding( new Insets(10));
-
-        Scene scene = new Scene(vbox, 400, 200);
-
-        JMetro jMetro = new JMetro();
-        jMetro.setScene(scene);
-
-        stage.setScene(scene);
-        stage.show();
+        LoadingDialog loadingDialog = new LoadingDialog();
+        loadingDialog.showLoadingDialog("Saving PGN...");
 
         Task<Void> task = new Task<>() {
-            @Override protected Void call() throws Exception {
+            @Override protected Void call() throws IOException {
 
                 OptimizedRandomAccessFile rafReader = null;
-                OptimizedRandomAccessFile rafWriter = null;
-                BufferedWriter writer = null;
 
                 File currentPgn = new File(currentPgnFilename);
                 long fileSize = currentPgn.length();
@@ -168,10 +136,10 @@ public class PgnDatabase {
 
                 long linesWritten = 0;
 
-                try {
+                try (
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(tmpFilename));
+                ) {
                     rafReader = new OptimizedRandomAccessFile(currentPgnFilename, "r");
-                    //rafWriter = new OptimizedRandomAccessFile(tmpFilename, "rw");
-                    writer = new BufferedWriter(new FileWriter(tmpFilename));
 
                     for (int i = 0; i < entries.size(); i++) {
 
@@ -231,6 +199,7 @@ public class PgnDatabase {
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
+                    // Raf reader do not implements AutoClosable so I'll need to close manually
                     if (rafReader != null) {
                         try {
                             rafReader.close();
@@ -238,38 +207,24 @@ public class PgnDatabase {
                             e.printStackTrace();
                         }
                     }
-                    if (rafWriter != null) {
-                        try {
-                            rafWriter.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if(writer != null) {
-                        try {
-                            writer.flush();
-                            writer.close();
-                        } catch(IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
                 }
 
                 File pgn = new File(pgnFilename);
-                pgn.delete();
-                tmpFile.renameTo(pgn);
-
+                Path pgnPath = pgn.toPath();
+                Path tmpFilePath = tmpFile.toPath();
+                Files.delete(pgnPath);
+                Files.move(tmpFilePath, pgnPath);                
                 return null;
             }
         };
 
-
+        ProgressBar progressBar = loadingDialog.getProgressBar();
         progressBar.progressProperty().bind(task.progressProperty());
 
         task.setOnSucceeded(e -> {
             unregisterRunningTask(task);
             task.getValue();
-            stage.close();
+            loadingDialog.close();
             if(this.dialogDatabase != null) {
                 dialogDatabase.updateTable();
             }
@@ -406,7 +361,7 @@ public class PgnDatabase {
 
     public void deleteGame(int index) {
 
-        String tmpFilenameWoDir = Util.getRandomFilename();
+        String tmpFilenameWoDir = new Util().getRandomFilename();
 
         File file = new File(filename);
         File path = file.getParentFile();
@@ -421,27 +376,8 @@ public class PgnDatabase {
 
         final ObservableList<PgnDatabaseEntry> entries = this.entries;
 
-        stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UNDECORATED);
-
-        Label lblScanPgn = new Label("Deleting Game...");
-        ProgressBar progressBar = new ProgressBar();
-
-        VBox vbox = new VBox();
-        vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(lblScanPgn, progressBar);
-
-        vbox.setSpacing(10);
-        vbox.setPadding( new Insets(10));
-
-        Scene scene = new Scene(vbox, 400, 200);
-
-        JMetro jMetro = new JMetro();
-        jMetro.setScene(scene);
-
-        stage.setScene(scene);
-        stage.show();
+        LoadingDialog loadingDialog = new LoadingDialog();
+        loadingDialog.showLoadingDialog("Deleting Game...");
 
         Task<Void> task = new Task<>() {
             @Override protected Void call() throws Exception {
@@ -536,13 +472,13 @@ public class PgnDatabase {
             }
         };
 
-
+        ProgressBar progressBar = loadingDialog.getProgressBar();
         progressBar.progressProperty().bind(task.progressProperty());
 
         task.setOnSucceeded(e -> {
             unregisterRunningTask(task);
             task.getValue();
-            stage.close();
+            loadingDialog.close();
             if(this.dialogDatabase != null) {
                 dialogDatabase.updateTable();
             }
@@ -559,27 +495,8 @@ public class PgnDatabase {
 
     public void open() {
 
-        stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UNDECORATED);
-
-        Label lblScanPgn = new Label("Scanning PGN...");
-        ProgressBar progressBar = new ProgressBar();
-
-        VBox vbox = new VBox();
-        vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(lblScanPgn, progressBar);
-
-        vbox.setSpacing(10);
-        vbox.setPadding( new Insets(10));
-
-        Scene scene = new Scene(vbox, 400, 200);
-
-        JMetro jMetro = new JMetro();
-        jMetro.setScene(scene);
-
-        stage.setScene(scene);
-        stage.show();
+        LoadingDialog loadingDialog = new LoadingDialog();
+        loadingDialog.showLoadingDialog("Scanning PGN...");
 
         final String tmpFilename = this.filename;
 
@@ -708,13 +625,13 @@ public class PgnDatabase {
             }
         };
 
-
+        ProgressBar progressBar = loadingDialog.getProgressBar();
         progressBar.progressProperty().bind(task.progressProperty());
 
         task.setOnSucceeded(e -> {
             unregisterRunningTask(task);
             entries = task.getValue();
-            stage.close();
+            loadingDialog.close();
             if(this.dialogDatabase != null) {
                 dialogDatabase.updateTable();
                 dialogDatabase.table.scrollTo(0);
@@ -730,28 +647,8 @@ public class PgnDatabase {
 
     public void search(SearchPattern pattern) {
 
-        stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UNDECORATED);
-
-        Label lblScanPgn = new Label("Searching...");
-        ProgressBar progressBar = new ProgressBar();
-
-        VBox vbox = new VBox();
-        vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(lblScanPgn, progressBar);
-
-        vbox.setSpacing(10);
-        vbox.setPadding( new Insets(10));
-
-        Scene scene = new Scene(vbox, 400, 200);
-
-        JMetro jMetro = new JMetro();
-        jMetro.setScene(scene);
-
-        stage.setScene(scene);
-        stage.show();
-
+        LoadingDialog loadingDialog = new LoadingDialog();
+        loadingDialog.showLoadingDialog("Searching...");
 
         Task<ObservableList<PgnDatabaseEntry>> task = new Task<>() {
             @Override protected ObservableList<PgnDatabaseEntry> call() throws Exception {
@@ -809,12 +706,13 @@ public class PgnDatabase {
             }
         };
 
+        ProgressBar progressBar = loadingDialog.getProgressBar();
         progressBar.progressProperty().bind(task.progressProperty());
 
         task.setOnSucceeded(e -> {
             unregisterRunningTask(task);
             searchResults = task.getValue();
-            stage.close();
+            loadingDialog.close();
             if(this.dialogDatabase != null) {
                 dialogDatabase.updateTableWithSearchResults();
             }
@@ -825,8 +723,5 @@ public class PgnDatabase {
         thread.setDaemon(false);
         thread.start();
     }
-
-
-
 
 }

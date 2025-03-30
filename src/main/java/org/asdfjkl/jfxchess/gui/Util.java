@@ -1,23 +1,20 @@
 package org.asdfjkl.jfxchess.gui;
 
-import java.util.Date;
-import java.util.Random;
+import java.security.SecureRandom;
 
 public class Util {
 
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     public static String getRandomFilename() {
 
-        Date date = new Date();
-        long timeInMilliseconds = date.getTime();
-        Random random = new Random(timeInMilliseconds);
-
-        String filename = "";
+        StringBuilder filename = new StringBuilder();
         for(int i=0;i<8;i++) {
-            char c = (char) (random.nextInt(26) + 97);
-            filename += c;
+            char c = (char) (SECURE_RANDOM.nextInt(26) + 97);
+            filename.append(c);
         }
 
-        return filename + ".tmp";
+        return filename.append(".tmp").toString();
     }
 
 }

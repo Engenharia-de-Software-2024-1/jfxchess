@@ -9,17 +9,19 @@ public class Arrow {
 
     @Override
     public boolean equals(Object o) {
-
+        boolean result = false;
         if (o instanceof Arrow) {
             Arrow other = (Arrow) o;
             if (other.xFrom == xFrom && other.yFrom == yFrom
                     && other.xTo == xTo && other.yTo == yTo) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+                result = true;
+            } 
+        } 
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

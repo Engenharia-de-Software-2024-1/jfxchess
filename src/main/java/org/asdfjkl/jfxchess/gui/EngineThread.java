@@ -26,9 +26,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.asdfjkl.jfxchess.exceptions.ThreadInterruptedException;
 
 public class EngineThread extends Thread {
 
+    private static final Logger LOGGER = Logger.getLogger(EngineThread.class.getName());
     static final Pattern REG_MOVES = Pattern.compile("\\s[a-z]\\d[a-z]\\d([a-z]{0,1})");
     static final Pattern REG_BESTMOVE = Pattern.compile("bestmove\\s([a-z]\\d[a-z]\\d[a-z]{0,1})");
     static final Pattern REG_STRENGTH = Pattern.compile("UCI_Elo value \\d+");
@@ -105,7 +109,9 @@ public class EngineThread extends Thread {
 	    engineInput.write(cmd + "\n");
 	    engineInput.flush();
 	} catch (IOException | InterruptedException e) {
-	    e.printStackTrace(System.out);
+        LOGGER.log(Level.WARNING, "Interrupted!", e);
+        Thread.currentThread().interrupt();
+        throw new ThreadInterruptedException("Thread Interrupted", e);
 	}
     }
 
@@ -118,7 +124,9 @@ public class EngineThread extends Thread {
         	try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Interrupted!", e);
+                Thread.currentThread().interrupt();
+                throw new ThreadInterruptedException("Thread Interrupted", e);
             }
 
             if (this.isInterrupted()) {
@@ -135,7 +143,9 @@ public class EngineThread extends Thread {
                             engineProcess.destroy();
                         }
                     } catch(IOException | InterruptedException e) {
-                    e.printStackTrace(System.out);
+                        LOGGER.log(Level.WARNING, "Interrupted!", e);
+                        Thread.currentThread().interrupt();
+                        throw new ThreadInterruptedException("Thread Interrupted", e);
                     }
                 }
                 // Stop this thread.
@@ -222,7 +232,9 @@ public class EngineThread extends Thread {
                             this.engineInfo.strength = -1;
                         }
                     } catch (InterruptedException e) {
-                        e.printStackTrace(System.out);
+                        LOGGER.log(Level.WARNING, "Interrupted!", e);
+                        Thread.currentThread().interrupt();
+                        throw new ThreadInterruptedException("Thread Interrupted", e);
                     }
                 }
                 continue;
@@ -294,7 +306,9 @@ public class EngineThread extends Thread {
                             engineProcess.destroy();
                         }
                     } catch (InterruptedException e) {
-                        e.printStackTrace(System.out);
+                        LOGGER.log(Level.WARNING, "Interrupted!", e);
+                        Thread.currentThread().interrupt();
+                        throw new ThreadInterruptedException("Thread Interrupted", e);
                     }
                     continue;
                 }

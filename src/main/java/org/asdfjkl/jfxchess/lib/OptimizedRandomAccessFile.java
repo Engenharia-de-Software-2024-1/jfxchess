@@ -317,7 +317,7 @@ public class OptimizedRandomAccessFile {
                     nextChar++;
                 }
             }
-            long d = nChars - nextChar;
+            long d = (long) nChars - nextChar;
             if (r <= d) {
                 nextChar += r;
                 r = 0;

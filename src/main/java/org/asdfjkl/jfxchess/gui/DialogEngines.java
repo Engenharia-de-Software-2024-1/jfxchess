@@ -41,11 +41,15 @@ import jfxtras.styles.jmetro.Style;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.asdfjkl.jfxchess.exceptions.ThreadInterruptedException;
 
 import static org.asdfjkl.jfxchess.gui.EngineOption.*;
 
 public class DialogEngines {
 
+    private static final Logger LOGGER = Logger.getLogger(DialogEngines.class.getName());
     final FileChooser fileChooser = new FileChooser();
 
     Stage stage;
@@ -292,7 +296,9 @@ public class DialogEngines {
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.WARNING, "Interrupted!", e);
+                        Thread.currentThread().interrupt();
+                        throw new ThreadInterruptedException("Thread Interrupted", e);
                     }
                 }
 
@@ -301,7 +307,6 @@ public class DialogEngines {
                     bro.write("uci\n");
                     bro.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
                     throw new RuntimeException("Failed to send UCI-commands to the engine process. "
                             + file.getAbsolutePath()
                             + e.getClass() + ": " + e.getMessage());
@@ -311,8 +316,9 @@ public class DialogEngines {
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                        LOGGER.log(Level.WARNING, "Interrupted!", e);
+                        Thread.currentThread().interrupt();
+                        throw new ThreadInterruptedException("Thread Interrupted", e);                    }
                 }
 
                 Engine engine = new Engine();
@@ -332,7 +338,6 @@ public class DialogEngines {
                                 engine.options.add(engineOption);
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
                             bre.close();
                             bri.close();
                             throw (new RuntimeException("Couldn't parse engine option: "
@@ -341,7 +346,6 @@ public class DialogEngines {
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
                     throw new RuntimeException("Failed to read commands from the engine process "
                             + file.getAbsolutePath()
                             + e.getClass() + ": " + e.getMessage());
@@ -358,7 +362,6 @@ public class DialogEngines {
                     bro.write("quit\n");
                     bro.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
                     throw new RuntimeException("Failed to send stop and quit to the engine process. "
                             + file.getAbsolutePath()
                             + e.getClass() + ": " + e.getMessage());
@@ -371,7 +374,9 @@ public class DialogEngines {
                         engineProcess.destroy();
                     }
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.WARNING, "Interrupted!", e);
+                    Thread.currentThread().interrupt();
+                    throw new ThreadInterruptedException("Thread Interrupted", e);                   
                 }
 
                 // Add engine to the engineList and make the list item selected.

@@ -25,9 +25,12 @@ import javafx.beans.value.ObservableValue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.asdfjkl.jfxchess.exceptions.ThreadInterruptedException;
 
 public class EngineController {
-
+    private static final Logger LOGGER = Logger.getLogger(EngineController.class.getName());
     final EngineThread engineThread;
     final BlockingQueue<String> cmdQueue = new LinkedBlockingQueue<String>();
     Engine currentEngine = null;
@@ -80,7 +83,9 @@ public class EngineController {
                 try {
                     cmdQueue.put("stop");
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.WARNING, "Interrupted!", e);
+                    Thread.currentThread().interrupt();
+                    throw new ThreadInterruptedException("Thread Interrupted", e);
                 }
                 //inGoInfinite = false;
             }
@@ -89,7 +94,9 @@ public class EngineController {
         try {
             cmdQueue.put(cmd);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Interrupted!", e);
+            Thread.currentThread().interrupt();
+            throw new ThreadInterruptedException("Thread Interrupted", e);
         }
     }
 
@@ -100,7 +107,9 @@ public class EngineController {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Interrupted!", e);
+                Thread.currentThread().interrupt();
+                throw new ThreadInterruptedException("Thread Interrupted", e);
             }
         } while (engineThread.engineIsOn());
     }
@@ -117,7 +126,9 @@ public class EngineController {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Interrupted!", e);
+                Thread.currentThread().interrupt();
+                throw new ThreadInterruptedException("Thread Interrupted", e);
             }
         } while (!engineThread.engineIsOn());
 

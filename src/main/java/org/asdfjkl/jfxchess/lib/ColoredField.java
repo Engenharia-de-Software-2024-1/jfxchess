@@ -7,17 +7,19 @@ public class ColoredField {
 
     @Override
     public boolean equals(Object o) {
-
+        boolean result = false;
         if (o instanceof ColoredField) {
             ColoredField other = (ColoredField) o;
             if(other.x == x && other.y == y) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+                result = true;
+            } 
+        } 
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
 }

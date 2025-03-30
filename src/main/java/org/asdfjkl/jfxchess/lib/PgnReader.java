@@ -62,6 +62,8 @@ public class PgnReader {
                     if (game_pos == -1) {
                         game_pos = last_pos;
                         current = new PgnDatabaseEntry();
+                    } else if (current == null) {  
+                        current = new PgnDatabaseEntry();
                     }
                     last_pos = raf.getFilePointer();
 
@@ -99,7 +101,7 @@ public class PgnReader {
                     inComment = currentLine.lastIndexOf("{") > currentLine.lastIndexOf("}");
                 }
 
-                if (game_pos != -1) {
+                if (game_pos != -1 && current != null) {
                     current.setOffset(game_pos);
                     entries.add(current);
                     game_pos = -1;
