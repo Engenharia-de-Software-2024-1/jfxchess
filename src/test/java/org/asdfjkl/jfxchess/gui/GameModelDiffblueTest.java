@@ -74,6 +74,7 @@ class GameModelDiffblueTest {
    * Methods under test:
    * <ul>
    *   <li>{@link GameModel#setComputerThinkTimeSecs(int)}
+   *   <li>{@link GameModel#setEloHasBeenSetInGUI(boolean)}
    *   <li>{@link GameModel#setEngineStrength(int)}
    *   <li>{@link GameModel#setFlipBoard(boolean)}
    *   <li>{@link GameModel#setGame(Game)}
@@ -95,7 +96,6 @@ class GameModelDiffblueTest {
    *   <li>{@link GameModel#getGameAnalysisThreshold()}
    *   <li>{@link GameModel#getHumanPlayerColor()}
    *   <li>{@link GameModel#getMode()}
-   *   <li>{@link GameModel#getMultiPv()}
    *   <li>{@link GameModel#getPgnDatabase()}
    *   <li>{@link GameModel#getSearchPattern()}
    * </ul>
@@ -107,8 +107,8 @@ class GameModelDiffblueTest {
       "boolean GameModel.getFlipBoard()", "Game GameModel.getGame()", "int GameModel.getGameAnalysisForPlayer()",
       "boolean GameModel.getGameAnalysisJustStarted()", "int GameModel.getGameAnalysisThinkTimeSecs()",
       "double GameModel.getGameAnalysisThreshold()", "boolean GameModel.getHumanPlayerColor()",
-      "int GameModel.getMode()", "int GameModel.getMultiPv()", "PgnDatabase GameModel.getPgnDatabase()",
-      "SearchPattern GameModel.getSearchPattern()", "void GameModel.setComputerThinkTimeSecs(int)",
+      "int GameModel.getMode()", "PgnDatabase GameModel.getPgnDatabase()", "SearchPattern GameModel.getSearchPattern()",
+      "void GameModel.setComputerThinkTimeSecs(int)", "void GameModel.setEloHasBeenSetInGUI(boolean)",
       "void GameModel.setEngineStrength(int)", "void GameModel.setFlipBoard(boolean)", "void GameModel.setGame(Game)",
       "void GameModel.setGameAnalysisForPlayer(int)", "void GameModel.setGameAnalysisJustStarted(boolean)",
       "void GameModel.setGameAnalysisThinkTimeSecs(int)", "void GameModel.setGameAnalysisThreshold(double)",
@@ -120,6 +120,7 @@ class GameModelDiffblueTest {
 
     // Act
     gameModel.setComputerThinkTimeSecs(1);
+    gameModel.setEloHasBeenSetInGUI(true);
     gameModel.setEngineStrength(1);
     gameModel.setFlipBoard(true);
     Game game = new Game();
@@ -143,7 +144,6 @@ class GameModelDiffblueTest {
     double actualGameAnalysisThreshold = gameModel.getGameAnalysisThreshold();
     boolean actualHumanPlayerColor = gameModel.getHumanPlayerColor();
     int actualMode = gameModel.getMode();
-    int actualMultiPv = gameModel.getMultiPv();
     PgnDatabase actualPgnDatabase = gameModel.getPgnDatabase();
     SearchPattern actualSearchPattern = gameModel.getSearchPattern();
 
@@ -157,7 +157,6 @@ class GameModelDiffblueTest {
     assertEquals(1, actualGameAnalysisForPlayer);
     assertEquals(1, actualGameAnalysisThinkTimeSecs);
     assertEquals(1, actualMode);
-    assertEquals(1, actualMultiPv);
     assertEquals(10.0d, actualGameAnalysisThreshold);
     assertTrue(actualFlipBoard);
     assertTrue(actualGameAnalysisJustStarted);

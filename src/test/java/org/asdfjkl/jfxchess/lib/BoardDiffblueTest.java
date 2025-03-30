@@ -730,6 +730,135 @@ class BoardDiffblueTest {
   }
 
   /**
+   * Test {@link Board#getPieceAt(int)} with {@code internalCoordinate}.
+   * <ul>
+   *   <li>When {@link CONSTANTS#A1}.</li>
+   *   <li>Then return zero.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link Board#getPieceAt(int)}
+   */
+  @Test
+  @DisplayName("Test getPieceAt(int) with 'internalCoordinate'; when A1; then return zero")
+  @Tag("MaintainedByDiffblue")
+  @MethodsUnderTest({"int Board.getPieceAt(int)"})
+  void testGetPieceAtWithInternalCoordinate_whenA1_thenReturnZero() {
+    // Arrange, Act and Assert
+    assertEquals(0, (new Board()).getPieceAt(CONSTANTS.A1));
+  }
+
+  /**
+   * Test {@link Board#getPieceAt(int)} with {@code internalCoordinate}.
+   * <ul>
+   *   <li>When ninety-nine.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link Board#getPieceAt(int)}
+   */
+  @Test
+  @DisplayName("Test getPieceAt(int) with 'internalCoordinate'; when ninety-nine")
+  @Tag("MaintainedByDiffblue")
+  @MethodsUnderTest({"int Board.getPieceAt(int)"})
+  void testGetPieceAtWithInternalCoordinate_whenNinetyNine() {
+    // Arrange, Act and Assert
+    assertThrows(IllegalArgumentException.class, () -> (new Board()).getPieceAt(99));
+  }
+
+  /**
+   * Test {@link Board#getPieceAt(int)} with {@code internalCoordinate}.
+   * <ul>
+   *   <li>When one.</li>
+   *   <li>Then throw {@link IllegalArgumentException}.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link Board#getPieceAt(int)}
+   */
+  @Test
+  @DisplayName("Test getPieceAt(int) with 'internalCoordinate'; when one; then throw IllegalArgumentException")
+  @Tag("MaintainedByDiffblue")
+  @MethodsUnderTest({"int Board.getPieceAt(int)"})
+  void testGetPieceAtWithInternalCoordinate_whenOne_thenThrowIllegalArgumentException() {
+    // Arrange, Act and Assert
+    assertThrows(IllegalArgumentException.class, () -> (new Board()).getPieceAt(1));
+  }
+
+  /**
+   * Test {@link Board#getKingPos(boolean)}.
+   * <ul>
+   *   <li>Given {@link Board#Board(boolean)} with startingPosition is {@code true}.</li>
+   *   <li>When {@code false}.</li>
+   *   <li>Then return {@link CONSTANTS#E1}.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link Board#getKingPos(boolean)}
+   */
+  @Test
+  @DisplayName("Test getKingPos(boolean); given Board(boolean) with startingPosition is 'true'; when 'false'; then return E1")
+  @Tag("MaintainedByDiffblue")
+  @MethodsUnderTest({"int Board.getKingPos(boolean)"})
+  void testGetKingPos_givenBoardWithStartingPositionIsTrue_whenFalse_thenReturnE1() {
+    // Arrange, Act and Assert
+    assertEquals(CONSTANTS.E1, (new Board(true)).getKingPos(false));
+  }
+
+  /**
+   * Test {@link Board#getKingPos(boolean)}.
+   * <ul>
+   *   <li>Given {@link Board#Board(boolean)} with startingPosition is {@code true}.</li>
+   *   <li>When {@code true}.</li>
+   *   <li>Then return {@link CONSTANTS#E8}.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link Board#getKingPos(boolean)}
+   */
+  @Test
+  @DisplayName("Test getKingPos(boolean); given Board(boolean) with startingPosition is 'true'; when 'true'; then return E8")
+  @Tag("MaintainedByDiffblue")
+  @MethodsUnderTest({"int Board.getKingPos(boolean)"})
+  void testGetKingPos_givenBoardWithStartingPositionIsTrue_whenTrue_thenReturnE8() {
+    // Arrange, Act and Assert
+    assertEquals(CONSTANTS.E8, (new Board(true)).getKingPos(true));
+  }
+
+  /**
+   * Test {@link Board#getKingPos(boolean)}.
+   * <ul>
+   *   <li>Given {@link Board#Board()}.</li>
+   *   <li>When {@code false}.</li>
+   *   <li>Then throw {@link IllegalArgumentException}.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link Board#getKingPos(boolean)}
+   */
+  @Test
+  @DisplayName("Test getKingPos(boolean); given Board(); when 'false'; then throw IllegalArgumentException")
+  @Tag("MaintainedByDiffblue")
+  @MethodsUnderTest({"int Board.getKingPos(boolean)"})
+  void testGetKingPos_givenBoard_whenFalse_thenThrowIllegalArgumentException() {
+    // Arrange, Act and Assert
+    assertThrows(IllegalArgumentException.class, () -> (new Board()).getKingPos(false));
+  }
+
+  /**
+   * Test {@link Board#getKingPos(boolean)}.
+   * <ul>
+   *   <li>Given {@link Board#Board()}.</li>
+   *   <li>When {@code true}.</li>
+   *   <li>Then throw {@link IllegalArgumentException}.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link Board#getKingPos(boolean)}
+   */
+  @Test
+  @DisplayName("Test getKingPos(boolean); given Board(); when 'true'; then throw IllegalArgumentException")
+  @Tag("MaintainedByDiffblue")
+  @MethodsUnderTest({"int Board.getKingPos(boolean)"})
+  void testGetKingPos_givenBoard_whenTrue_thenThrowIllegalArgumentException() {
+    // Arrange, Act and Assert
+    assertThrows(IllegalArgumentException.class, () -> (new Board()).getKingPos(true));
+  }
+
+  /**
    * Test getters and setters.
    * <p>
    * Methods under test:

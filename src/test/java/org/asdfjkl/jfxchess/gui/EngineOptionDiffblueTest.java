@@ -150,6 +150,29 @@ class EngineOptionDiffblueTest {
   /**
    * Test {@link EngineOption#toUciCommand()}.
    * <ul>
+   *   <li>Given {@link EngineOption} (default constructor) {@link EngineOption#type} is four.</li>
+   *   <li>Then return {@code setoption name}.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link EngineOption#toUciCommand()}
+   */
+  @Test
+  @DisplayName("Test toUciCommand(); given EngineOption (default constructor) type is four; then return 'setoption name'")
+  @Tag("MaintainedByDiffblue")
+  @MethodsUnderTest({"String EngineOption.toUciCommand()"})
+  void testToUciCommand_givenEngineOptionTypeIsFour_thenReturnSetoptionName() {
+    // Arrange
+    EngineOption engineOption = new EngineOption();
+    engineOption.type = 4;
+    engineOption.checkStatusValue = false;
+
+    // Act and Assert
+    assertEquals("setoption name ", engineOption.toUciCommand());
+  }
+
+  /**
+   * Test {@link EngineOption#toUciCommand()}.
+   * <ul>
    *   <li>Given {@link EngineOption} (default constructor) {@link EngineOption#type} is one.</li>
    *   <li>Then return {@code setoption name value false}.</li>
    * </ul>
@@ -282,48 +305,42 @@ class EngineOptionDiffblueTest {
   /**
    * Test {@link EngineOption#parseUciOptionString(String)}.
    * <ul>
-   *   <li>Given {@link EngineOption} (default constructor) {@link EngineOption#name} is {@code option name}.</li>
-   *   <li>Then return {@code true}.</li>
+   *   <li>Given {@link EngineOption} (default constructor) {@link EngineOption#name} is empty string.</li>
+   *   <li>When {@code option name}.</li>
    * </ul>
    * <p>
    * Method under test: {@link EngineOption#parseUciOptionString(String)}
    */
   @Test
-  @DisplayName("Test parseUciOptionString(String); given EngineOption (default constructor) name is 'option name'; then return 'true'")
+  @DisplayName("Test parseUciOptionString(String); given EngineOption (default constructor) name is empty string; when 'option name'")
   @Tag("MaintainedByDiffblue")
   @MethodsUnderTest({"boolean EngineOption.parseUciOptionString(String)"})
-  void testParseUciOptionString_givenEngineOptionNameIsOptionName_thenReturnTrue() {
+  void testParseUciOptionString_givenEngineOptionNameIsEmptyString_whenOptionName() {
     // Arrange
     EngineOption engineOption = new EngineOption();
-    engineOption.name = "option name";
+    engineOption.name = "";
     engineOption.type = 0;
 
     // Act and Assert
-    assertEquals(0, engineOption.type);
-    assertTrue(engineOption.parseUciOptionString("option name"));
+    assertFalse(engineOption.parseUciOptionString("option name"));
   }
 
   /**
    * Test {@link EngineOption#parseUciOptionString(String)}.
    * <ul>
-   *   <li>Given {@link EngineOption} (default constructor) {@link EngineOption#type} is minus one.</li>
+   *   <li>Given {@link EngineOption} (default constructor).</li>
+   *   <li>When {@code option nametype}.</li>
    * </ul>
    * <p>
    * Method under test: {@link EngineOption#parseUciOptionString(String)}
    */
   @Test
-  @DisplayName("Test parseUciOptionString(String); given EngineOption (default constructor) type is minus one")
+  @DisplayName("Test parseUciOptionString(String); given EngineOption (default constructor); when 'option nametype'")
   @Tag("MaintainedByDiffblue")
   @MethodsUnderTest({"boolean EngineOption.parseUciOptionString(String)"})
-  void testParseUciOptionString_givenEngineOptionTypeIsMinusOne() {
-    // Arrange
-    EngineOption engineOption = new EngineOption();
-    engineOption.name = "option name";
-    engineOption.type = -1;
-
-    // Act and Assert
-    assertEquals(-1, engineOption.type);
-    assertFalse(engineOption.parseUciOptionString("option name"));
+  void testParseUciOptionString_givenEngineOption_whenOptionNametype() {
+    // Arrange, Act and Assert
+    assertFalse((new EngineOption()).parseUciOptionString("option nametype"));
   }
 
   /**
@@ -340,60 +357,30 @@ class EngineOptionDiffblueTest {
   @Tag("MaintainedByDiffblue")
   @MethodsUnderTest({"boolean EngineOption.parseUciOptionString(String)"})
   void testParseUciOptionString_givenEngineOption_whenOptionString() {
-    // Arrange
-    EngineOption engineOption = new EngineOption();
-
-    // Act and Assert
-    assertEquals(-1, engineOption.type);
-    assertFalse(engineOption.parseUciOptionString("Option String"));
+    // Arrange, Act and Assert
+    assertFalse((new EngineOption()).parseUciOptionString("Option String"));
   }
 
   /**
-   * Test {@link EngineOption#parseUciOptionString(String)}.
+   * Test {@link EngineOption#toUciOptionString()}.
    * <ul>
-   *   <li>When {@code option name}.</li>
-   *   <li>Then {@link EngineOption} (default constructor) {@link EngineOption#type} is zero.</li>
+   *   <li>Given {@link EngineOption} (default constructor) {@link EngineOption#type} is four.</li>
+   *   <li>Then return {@code option name type button}.</li>
    * </ul>
    * <p>
-   * Method under test: {@link EngineOption#parseUciOptionString(String)}
+   * Method under test: {@link EngineOption#toUciOptionString()}
    */
   @Test
-  @DisplayName("Test parseUciOptionString(String); when 'option name'; then EngineOption (default constructor) type is zero")
+  @DisplayName("Test toUciOptionString(); given EngineOption (default constructor) type is four; then return 'option name type button'")
   @Tag("MaintainedByDiffblue")
-  @MethodsUnderTest({"boolean EngineOption.parseUciOptionString(String)"})
-  void testParseUciOptionString_whenOptionName_thenEngineOptionTypeIsZero() {
+  @MethodsUnderTest({"String EngineOption.toUciOptionString()"})
+  void testToUciOptionString_givenEngineOptionTypeIsFour_thenReturnOptionNameTypeButton() {
     // Arrange
     EngineOption engineOption = new EngineOption();
-    engineOption.name = "";
-    engineOption.type = 0;
+    engineOption.type = 4;
 
     // Act and Assert
-    assertEquals(0, engineOption.type);
-    assertFalse(engineOption.parseUciOptionString("option name"));
-  }
-
-  /**
-   * Test {@link EngineOption#parseUciOptionString(String)}.
-   * <ul>
-   *   <li>When {@code option nametype spin}.</li>
-   *   <li>Then {@link EngineOption} (default constructor) {@link EngineOption#type} is zero.</li>
-   * </ul>
-   * <p>
-   * Method under test: {@link EngineOption#parseUciOptionString(String)}
-   */
-  @Test
-  @DisplayName("Test parseUciOptionString(String); when 'option nametype spin'; then EngineOption (default constructor) type is zero")
-  @Tag("MaintainedByDiffblue")
-  @MethodsUnderTest({"boolean EngineOption.parseUciOptionString(String)"})
-  void testParseUciOptionString_whenOptionNametypeSpin_thenEngineOptionTypeIsZero() {
-    // Arrange
-    EngineOption engineOption = new EngineOption();
-    engineOption.name = "";
-    engineOption.type = 0;
-
-    // Act and Assert
-    assertEquals(0, engineOption.type);
-    assertFalse(engineOption.parseUciOptionString("option nametype spin"));
+    assertEquals("option name  type button ", engineOption.toUciOptionString());
   }
 
   /**
