@@ -109,7 +109,7 @@ public class PgnDatabase {
 
     public void saveDatabaseAs(String filename) {
 
-        String tmpFilenameWoDir = new Util().getRandomFilename();
+        String tmpFilenameWoDir = Util.getRandomFilename();
 
         File file = new File(filename);
         File path = file.getParentFile();

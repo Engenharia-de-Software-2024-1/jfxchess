@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.security.SecureRandom;
 
 public class PolyglotExt {
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     byte[] book;
     public boolean readFile = false;
@@ -239,7 +240,7 @@ public class PolyglotExt {
             for(PolyglotExtEntry entry : entries) {
                 overallCount += entry.count;
             }
-            int idx = (new SecureRandom().nextInt() * overallCount);
+            int idx = (SECURE_RANDOM.nextInt() * overallCount);
             int tempCount = 0;
             for(PolyglotExtEntry entry : entries) {
                 tempCount += entry.count;
